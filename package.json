@@ -1,0 +1,60 @@
+{
+  "name": "progress-img",
+  "version": "1.0.0",
+  "description": "Use images as progress bars in the terminal!",
+  "keywords": [
+    "gif",
+    "png",
+    "jpg",
+    "jpeg",
+    "bmp",
+    "tiff",
+    "progress",
+    "bar",
+    "image",
+    "pic",
+    "picture",
+    "load",
+    "loading",
+    "loader",
+    "stream",
+    "animate",
+    "animated",
+    "animation"
+  ],
+  "author": {
+    "name": "Kodie Grantham",
+    "email": "kodie.grantham@gmail.com",
+    "url": "http://kodieg.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kodie/progress-gif.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kodie/progress-gif/issues"
+  },
+  "homepage": "https://github.com/kodie/progress-gif",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "example": "node example.js",
+    "test": "standard"
+  },
+  "dependencies": {
+    "ansi-escapes": "^3.0.0",
+    "deasync": "^0.1.10",
+    "gif-frames": "^0.3.0",
+    "image-type": "^3.0.0",
+    "iterm2-version": "^2.3.0",
+    "lodash": "^4.17.4",
+    "log-update": "^2.1.0",
+    "parse-data-uri": "^0.2.0",
+    "progress-bar": "^0.1.1",
+    "request": "^2.81.0",
+    "stream-to-array": "^2.3.0"
+  },
+  "devDependencies": {
+    "standard": "^10.0.3"
+  }
+}
