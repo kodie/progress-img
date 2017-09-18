@@ -1,6 +1,6 @@
 {
   "name": "progress-img",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use images as progress bars in the terminal!",
   "keywords": [
     "gif",

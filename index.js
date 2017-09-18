@@ -10,6 +10,7 @@ const iterm2Version = require('iterm2-version')
 const lodash = require('lodash')
 const logUpdate = require('log-update')
 const parseDataUri = require('parse-data-uri')
+const path = require('path')
 const toArray = require('stream-to-array')
 const request = require('request')
 
@@ -18,7 +19,7 @@ const toArraySync = deasync(toArray)
 const requestSync = deasync(request)
 
 const defaults = {
-  image: './media/loader.gif',
+  image: path.join(__dirname, 'media', 'loader.gif'),
   width: 'auto',
   height: 'auto',
   preserveAspectRatio: true,
