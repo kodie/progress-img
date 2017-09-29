@@ -1,6 +1,6 @@
 {
   "name": "progress-img",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Use images as progress bars in the terminal!",
   "keywords": [
     "gif",
@@ -41,6 +41,9 @@
     "example": "node example.js",
     "test": "standard"
   },
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "dependencies": {
     "ansi-escapes": "^3.0.0",
     "deasync": "^0.1.10",
@@ -52,6 +55,7 @@
     "parse-data-uri": "^0.2.0",
     "progress-bar": "^0.1.1",
     "request": "^2.81.0",
+    "safe-buffer": "^5.1.1",
     "stream-to-array": "^2.3.0"
   },
   "devDependencies": {

@@ -1,11 +1,18 @@
 # progress-img
-[![npm package version](https://img.shields.io/npm/v/progress-img.svg?style=flat-square)](https://www.npmjs.com/package/progress-img) [![Travis build status](https://img.shields.io/travis/kodie/progress-img.svg?style=flat-square)](https://travis-ci.org/kodie/progress-img) [![npm package downloads](https://img.shields.io/npm/dt/progress-img.svg?style=flat-square)](https://www.npmjs.com/package/progress-img) [![index.js file size](https://img.shields.io/github/size/kodie/progress-img/index.js.svg?style=flat-square)](index.js) [![code style](https://img.shields.io/badge/code_style-standard-yellow.svg?style=flat-square)](https://github.com/standard/standard) [![license](https://img.shields.io/github/license/kodie/progress-img.svg?style=flat-square)](LICENSE.md)
+[![npm package version](https://img.shields.io/npm/v/progress-img.svg?style=flat-square)](https://www.npmjs.com/package/progress-img)
+[![Travis build status](https://img.shields.io/travis/kodie/progress-img.svg?style=flat-square)](https://travis-ci.org/kodie/progress-img)
+[![npm package downloads](https://img.shields.io/npm/dt/progress-img.svg?style=flat-square)](https://www.npmjs.com/package/progress-img)
+[![index.js file size](https://img.shields.io/github/size/kodie/progress-img/index.js.svg?style=flat-square)](index.js)
+[![code style](https://img.shields.io/badge/code_style-standard-yellow.svg?style=flat-square)](https://github.com/standard/standard)
+[![license](https://img.shields.io/github/license/kodie/progress-img.svg?style=flat-square)](LICENSE.md)
 
 ![](https://raw.githubusercontent.com/kodie/progress-img/master/media/preview.gif?raw=true)
 
 Use images as progress bars in the terminal!
 
-*Currently only supported on [iTerm >=3](https://www.iterm2.com/downloads.html).*
+## Requirements
+* [Node.js](https://nodejs.org) v4.0 or higher
+* [iTerm2](https://iterm2.com) v3.0 or higher
 
 ## Installation
 ```shell

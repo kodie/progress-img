@@ -2,6 +2,7 @@
 
 const ansiEscapes = require('ansi-escapes')
 const bar = require('progress-bar')
+const Buffer = require('safe-buffer').Buffer
 const deasync = require('deasync')
 const fs = require('fs')
 const gifFrames = require('gif-frames')
