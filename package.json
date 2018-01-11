@@ -1,8 +1,10 @@
 {
   "name": "progress-img",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Use images as progress bars in the terminal!",
   "keywords": [
+    "ascii",
+    "art",
     "gif",
     "png",
     "jpg",
@@ -11,6 +13,7 @@
     "tiff",
     "progress",
     "bar",
+    "img",
     "image",
     "pic",
     "picture",
@@ -20,7 +23,9 @@
     "stream",
     "animate",
     "animated",
-    "animation"
+    "animation",
+    "buffer",
+    "buffering"
   ],
   "author": {
     "name": "Kodie Grantham",
@@ -46,14 +51,14 @@
   },
   "dependencies": {
     "ansi-escapes": "^3.0.0",
+    "asciify-image": "^0.1.0",
     "deasync": "^0.1.10",
     "gif-frames": "^0.3.0",
     "image-type": "^3.0.0",
     "iterm2-version": "^2.3.0",
-    "lodash": "^4.17.4",
+    "lodash.isequal": "^4.5.0",
     "log-update": "^2.1.0",
     "parse-data-uri": "^0.2.0",
-    "progress-bar": "^0.1.1",
     "request": "^2.81.0",
     "safe-buffer": "^5.1.1",
     "stream-to-array": "^2.3.0"

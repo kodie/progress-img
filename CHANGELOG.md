@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [Unreleased]
 
 
+## [1.1.0] - 2018-01-11
+### Changed
+- [asciify-image](https://www.npmjs.com/package/asciify-image) is now used as a fallback instead of [progress-bar](https://www.npmjs.com/package/progress-bar).
+- [lodash.isequal](https://www.npmjs.com/package/lodash.isequal) is now used for checking if objects are equal rather than loading the entire [lodash](https://www.npmjs.com/package/lodash) library.
+
+### Removed
+- `fallback` parameter for all 3 functions.
+
+
 ## [1.0.2] - 2017-09-29
 ### Added
 - Support for node versions 4.0 through 5.12.
@@ -26,5 +35,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Initial release.
 
 [Unreleased]: https://github.com/kodie/progress-img/compare/v1.0.0...HEAD
+[1.1.0]: https://github.com/kodie/progress-img/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/kodie/progress-img/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/kodie/progress-img/compare/v1.0.0...v1.0.1

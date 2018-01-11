@@ -3,11 +3,14 @@
 const http = require('http')
 const ProgressImg = require('.')
 
-var progress = new ProgressImg({ textTop: 'Downloading file...', frameThrottle: '500ms' })
+var progress = new ProgressImg({
+  textTop: 'Downloading file...',
+  frameThrottle: '500ms'
+})
 
 var req = http.request({
   host: 'ipv4.download.thinkbroadband.com',
-  path: '/50MB.zip', // Available options: 1GB, 512MB, 200MB, 100MB, 50MB, 20MB, 10MB, 5MB
+  path: '/20MB.zip', // Available options: 1GB, 512MB, 200MB, 100MB, 50MB, 20MB, 10MB, 5MB
   port: 80
 })
 

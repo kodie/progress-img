@@ -12,7 +12,8 @@ Use images as progress bars in the terminal!
 
 ## Requirements
 * [Node.js](https://nodejs.org) v4.0 or higher
-* [iTerm2](https://iterm2.com) v3.0 or higher
+
+*[iTerm2](https://iterm2.com) v2.9 or higher is required to display actual images. Otherwise an [ASCII](https://en.wikipedia.org/wiki/ASCII_art) version of the images will be displayed.*
 
 ## Installation
 ```shell
@@ -67,10 +68,6 @@ var options = {
 
   expandGifs: false,
 
-  fallbackFormat: '$bar; $percentage;% loaded.',
-
-  fallbackWidth: 20,
-
   useFallback: true,
 
   textTop: 'Downloading file...',
@@ -101,6 +98,8 @@ The width and height of the image. Can be one of the following: (Defaults to `au
 * `N%`: N percent of the session's width or height.
 * `auto`: The image's inherent size will be used to determine an appropriate dimension.
 
+*Note: This option can only be used in the initial `ProgressImg` setup when using the ASCII fallback.*
+
 ### preserveAspectRatio
 Whether to preserve the aspect ratio of the image or not. (Defaults to `true`)
 
@@ -108,18 +107,6 @@ Whether to preserve the aspect ratio of the image or not. (Defaults to `true`)
 Whether or not to expand GIFs into separate frames. (Defaults to `true`)
 
 *Note: This option can only be used in the initial `ProgressImg` setup.*
-
-### fallbackFormat
-The string for the fallback progress bar to use. The following are variables that can be used: (Defaults to `null`)
-
-* `$bar;`: The progress bar.
-* `$percentage;`: The progress completed so far in a percentage.
-* `$progress;`: The progress completed so far in a decimal.
-
-*Note: If this option is used, `textBottom` and `textTop` will not be displayed with the fallback progress bar.*
-
-### fallbackWidth
-Width of the fallback progress bar in characters, borders excluded. (Defaults to `20`)
 
 ### useFallback
 Whether to use the fallback progress bar regardless if the user is using a supported terminal or not. Great for testing how the fallback progress bar looks or bypassing the terminal check. (Defaults to `null`)
@@ -129,8 +116,6 @@ Whether to use the fallback progress bar regardless if the user is using a suppo
 ### textTop
 ### textBottom
 Text to display above or below the image. (Defaults to `null`)
-
-*Note: Using multiple lines with either of these options will break the fallback progress bar unless `fallbackFormat` is set.*
 
 ### saveOptions
 Whether to overwrite the options set in the initial `ProgressImg` setup. (Defaults to `false`)
@@ -151,31 +136,6 @@ Throttle the frame changes by: (Defaults to `0`)
 
 ### output
 The stream to output to. (Defaults to `process.stdout`)
-
-## Fallback
-progress-img will automatically fallback to the [progress-bar](https://www.npmjs.com/package/progress-bar) package if it detects that the user is using an unsupported terminal.
-
-Also, every function accepts a function as the last parameter for defining custom fallbacks. Here's an example that displays an error if the user is using an unsupported terminal:
-
-```javascript
-var err = new Error('You are using an unsupported terminal.')
-
-var progress = new ProgressImg('cool.gif', { frameThrottle: '500ms' }, self => {
-  throw err
-})
-
-progress.set('50%', {}, (set, self) => {
-  throw err
-})
-
-progress.clear(self => {
-  throw err
-})
-
-progress.done(self => {
-  throw err
-})
-```
 
 ## License
 MIT. See the [License file](LICENSE.md) for more info.

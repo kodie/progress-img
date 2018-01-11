@@ -1,20 +1,21 @@
 'use strict'
 
 const ansiEscapes = require('ansi-escapes')
-const bar = require('progress-bar')
+const asciify = require('asciify-image')
 const Buffer = require('safe-buffer').Buffer
 const deasync = require('deasync')
 const fs = require('fs')
 const gifFrames = require('gif-frames')
 const imageType = require('image-type')
+const isEqual = require('lodash.isequal')
 const iterm2Version = require('iterm2-version')
-const lodash = require('lodash')
 const logUpdate = require('log-update')
 const parseDataUri = require('parse-data-uri')
 const path = require('path')
 const toArray = require('stream-to-array')
 const request = require('request')
 
+const asciifySync = deasync(asciify)
 const gifFramesSync = deasync(gifFrames)
 const toArraySync = deasync(toArray)
 const requestSync = deasync(request)
@@ -25,8 +26,6 @@ const defaults = {
   height: 'auto',
   preserveAspectRatio: true,
   expandGifs: true,
-  fallbackFormat: null,
-  fallbackWidth: 20,
   useFallback: null,
   textTop: null,
   textBottom: null,
@@ -36,7 +35,7 @@ const defaults = {
   output: process.stdout
 }
 
-var ProgressImg = function (img, opts, fallback) {
+var ProgressImg = function (img, opts) {
   if (!opts && typeof img === 'object' && !Array.isArray(img)) {
     opts = img
   }
@@ -45,6 +44,7 @@ var ProgressImg = function (img, opts, fallback) {
   this.current = null
   this.fallback = false
   this.frames = []
+  this.fallbackFrames = []
   this.lastSet = null
   this.log = null
   this.options = Object.assign({}, defaults, opts)
@@ -75,10 +75,24 @@ var ProgressImg = function (img, opts, fallback) {
   }
 
   if (this.fallback) {
-    this.fallback = bar.create(this.options.output, this.options.fallbackWidth)
-  } else {
-    this.log = logUpdate.create(this.options.output)
+    var fallbackFit = this.options.preserveAspectRatio ? 'box' : 'original'
+
+    if (this.options.height === 'auto' && this.options.width === 'auto') {
+      fallbackFit = 'box'
+    } else if (this.options.height === 'auto') {
+      fallbackFit = 'width'
+    } else if (this.options.width === 'auto') {
+      fallbackFit = 'height'
+    }
+
+    var fallbackOptions = {
+      fit: fallbackFit,
+      height: this.options.height === 'auto' ? '100%' : this.options.height.replace('px', ''),
+      width: this.options.width === 'auto' ? '100%' : this.options.width.replace('px', ''),
+    }
   }
+
+  this.log = logUpdate.create(this.options.output)
 
   img.forEach(i => {
     var buffer
@@ -117,21 +131,26 @@ var ProgressImg = function (img, opts, fallback) {
 
         frames.forEach(frame => {
           var parts = toArraySync(frame.getImage())
-          var buffers = parts.map(part => Buffer.from(part))
+          var frameBuffers = parts.map(part => Buffer.from(part))
+          var frameBuffer = Buffer.concat(frameBuffers)
 
-          this.frames.push(Buffer.concat(buffers))
+          this.frames.push(frameBuffer)
+
+          if (this.fallback) {
+            this.fallbackFrames.push(asciifySync(frameBuffer, fallbackOptions))
+          }
         })
       } catch (err) {
         throw err
       }
     } else {
       this.frames.push(buffer)
+
+      if (this.fallback) {
+        this.fallbackFrames.push(asciifySync(buffer, fallbackOptions))
+      }
     }
   })
-
-  if (this.fallback && fallback) {
-    fallback(this)
-  }
 
   if (!this.frames.length) {
     delete this.options.image
@@ -145,7 +164,7 @@ var ProgressImg = function (img, opts, fallback) {
   return this
 }
 
-ProgressImg.prototype.set = function (set, opts, fallback) {
+ProgressImg.prototype.set = function (set, opts) {
   if (!opts && typeof set === 'object') {
     opts = set
     set = null
@@ -160,31 +179,19 @@ ProgressImg.prototype.set = function (set, opts, fallback) {
   opts = Object.assign({}, this.options, opts)
 
   var frameNumber = set
-  var frameLimit = (this.frames.length - 1)
+  var frameLimit = ((this.fallback ? this.fallbackFrames.length : this.frames.length) - 1)
 
   if (opts.saveOptions) {
     opts.saveOptions = false
     this.options = opts
   }
 
-  if (this.fallback) {
-    if (String(set).slice(-1) === '%') {
-      frameNumber = (set.slice(0, -1) / 100)
-    } else {
-      frameNumber = (((set / frameLimit) * 100) / 100).toFixed(2)
-    }
+  if (String(set).slice(-1) === '%') {
+    frameNumber = Math.round((set.slice(0, -1) / 100) * frameLimit)
+  }
 
-    if (frameNumber > 1) {
-      frameNumber = 1
-    }
-  } else {
-    if (String(set).slice(-1) === '%') {
-      frameNumber = Math.round((set.slice(0, -1) / 100) * frameLimit)
-    }
-
-    if (frameNumber > frameLimit) {
-      frameNumber = frameLimit
-    }
+  if (frameNumber > frameLimit) {
+    frameNumber = frameLimit
   }
 
   if (frameNumber < 0) {
@@ -192,11 +199,11 @@ ProgressImg.prototype.set = function (set, opts, fallback) {
   }
 
   if (!this.cleared) {
-    if (frameNumber === this.current && lodash.isEqual(this.prevOptions, opts)) {
+    if (frameNumber === this.current && isEqual(this.prevOptions, opts)) {
       return this
     }
 
-    if (!this.fallback && opts.frameThrottle && set !== 0) {
+    if (opts.frameThrottle && set !== 0) {
       var frameThrottle = opts.frameThrottle
 
       if (String(frameThrottle).slice(-2) === 'ms') {
@@ -222,79 +229,35 @@ ProgressImg.prototype.set = function (set, opts, fallback) {
   this.lastSet = Date.now()
   this.prevOptions = opts
 
+  var content
+
   if (this.fallback) {
-    if (fallback) {
-      fallback(set, this)
-    } else {
-      var format = ''
-
-      if (opts.fallbackFormat) {
-        format = opts.fallbackFormat
-      } else {
-        if (opts.textTop) {
-          format = opts.textTop + ' '
-        }
-
-        format += '$bar;'
-
-        if (opts.textBottom) {
-          format += ' ' + opts.textBottom
-        }
-      }
-    }
-
-    this.fallback.format = format
-
-    if (opts.fallbackWidth) {
-      this.fallback.width = opts.fallbackWidth
-    }
-
-    this.fallback.update(frameNumber)
+    content = this.fallbackFrames[frameNumber]
   } else {
-    var image = ansiEscapes.image(this.frames[frameNumber], opts)
-    var content = image
-
-    if (opts.textTop) {
-      content = opts.textTop + '\n' + content
-    }
-
-    if (opts.textBottom) {
-      content += '\n' + opts.textBottom
-    }
-
-    this.log(content)
+    content = ansiEscapes.image(this.frames[frameNumber], opts)
   }
+
+  if (opts.textTop) {
+    content = opts.textTop + '\n' + content
+  }
+
+  if (opts.textBottom) {
+    content += '\n' + opts.textBottom
+  }
+
+  this.log(content)
 
   return this
 }
 
-ProgressImg.prototype.clear = function (fallback) {
-  if (this.fallback) {
-    if (fallback) {
-      fallback(this)
-    } else {
-      this.options.output.write(ansiEscapes.eraseLines(1))
-    }
-  } else {
-    this.log.clear()
-  }
-
+ProgressImg.prototype.clear = function () {
+  this.log.clear()
   this.cleared = true
-
   return this
 }
 
-ProgressImg.prototype.done = function (fallback) {
-  if (this.fallback) {
-    if (fallback) {
-      fallback(this)
-    } else if (!this.cleared) {
-      this.options.output.write('\n')
-    }
-  } else {
-    this.log.done()
-  }
-
+ProgressImg.prototype.done = function () {
+  this.log.done()
   return this
 }
 
