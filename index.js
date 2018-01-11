@@ -88,7 +88,7 @@ var ProgressImg = function (img, opts) {
     var fallbackOptions = {
       fit: fallbackFit,
       height: this.options.height === 'auto' ? '100%' : this.options.height.replace('px', ''),
-      width: this.options.width === 'auto' ? '100%' : this.options.width.replace('px', ''),
+      width: this.options.width === 'auto' ? '100%' : this.options.width.replace('px', '')
     }
   }
 
